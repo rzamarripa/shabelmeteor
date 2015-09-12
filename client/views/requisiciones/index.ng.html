@@ -1,0 +1,115 @@
+
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#form" aria-expanded="false" aria-controls="form" style="margin-bottom:10px;">
+  Nuevo
+</button>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="collapse" id="form">
+          <div class="">
+            <form>
+                <div class="row">
+                    <div class="form-group col-sm-2">
+                        <label for="folio">Folio</label>
+                        <input id="folio" class="form-control" type="text" ng-model="requisicion.folio">
+                    </div>
+                   
+                      <div class="form-group col-sm-4">
+                        <label for="cliente">Cliente</label>
+                        <select id="cliente" class="form-control" ng-model="requisicion.cliente_id">
+                          <option ng-repeat="cliente in clientes" value="{{cliente._id}}">{{cliente.nombre}}</option>
+                        </select>
+                      </div><!--/col-->
+        
+                    <div class="form-group col-sm-4">
+                        <label for="dep">Departamento</label>
+                        <input id="dep" type="text" class="form-control" ng-model="requisicion.departamento">
+                    </div>
+                    <div class="form-group col-sm-2">
+                        <label for="fecha">Fecha</label>
+                        <input id="fecha" type="date" class="form-control" ng-model="requisicion.fecha">
+                    </div>
+                </div>
+                <div class="row">
+                <div class="form-group col-sm-12">
+                        <label for="comentarios">Comentarios</label>
+                        <textarea id="comentarios" class="form-control" ng-model="requisicion.comentarios"></textarea> 
+                </div>
+                </div>
+                <h1>Articulos</h1>
+                <table class="table table-bordered table-striped">
+                <thead>
+                    <tr>
+                        <th>Cantidad</th>
+                        <th>Articulo</th>
+                        <th>Comentarios</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    <tr ng-repeat="item in items">
+                        <td class="col-sm-2">
+                            <div class="col-sm-12" >
+                                <input type="text" ng-model="item.cantidad" class="form-control" />
+                            </div>
+                        </td>
+                        <td>
+                            <span class="control-group" ng-class="{true: 'error', false: ''}[item.error.articulo]">
+                                <select class="form-control" ng-model="item.articulo_id">
+                                  <option ng-repeat="articulo in articulos" value="{{articulo._id}}" ng-selected="selected(articulo._id,item.articulo_id)">{{articulo.nombre}}</option>
+                                </select>
+                            </span>
+                        </td>
+                        <td>
+                            <div class="col-sm-12">
+                                <input type="text" ng-model="item.comentarios" class="form-control" />
+                            </div>                      
+                        </td>
+                        <td>
+                            <button ng-click="cancelar(item, $event)" class="btn btn-mini btn-danger">Cancelar</button>
+                        </td>
+                    </tr>
+                </tbody>
+            </table>
+            <a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
+                <button type="button" ng-click="save(requisicion); requisicion='';" class="btn btn-success" ng-show="action">Guardar</button>
+                <button type="button" ng-click="save(requisicion); requisicion='';" class="btn btn-success" ng-show="!action">Actualizar</button>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+    <table class="table table-striped table-bordered" ng-show="requisiciones.length > 0">
+        <tr>
+            <th width="10%">Folio</th>
+            <th width="20%">Cliente</th>
+            <th width="20%">Departamento</th>
+            <th width="10%">Fecha</th>
+            <th width="30%">Comentarios</th>
+            <th width="10%">Acciones</th>
+        </tr>
+        <tr ng-repeat="requisicion in requisiciones">
+            <td>{{ requisicion.folio }}</td>
+            <td>{{ nombreCliente(requisicion) }}</td>
+            <td>{{ requisicion.departamento }}</td>
+            <td>{{ requisicion.fecha }}</td>
+            <td>{{ requisicion.comentarios }}</td>
+            <td>
+            <div class="dropdown">
+              <button class="btn btn-small btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                Acciones
+                <span class="caret"></span>
+              </button>
+              <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                <li><a ng-click="editar(requisicion._id)">Editar</a></li>
+                <li><a href="#/cotizaciones/create/{{requisicion._id}}">Cotizar</a></li>
+                <li><a href="#/requisiciones" ng-click="remove(requisicion)">Eliminar</a></li>
+              </ul>
+            </div>
+            </td>
+        </tr>
+    </table>
+    <div class="alert alert-danger" ng-show="!requisiciones.length">No existen requisiciones</div>
+    </div>
+</div>

@@ -1,0 +1,73 @@
+
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#form" aria-expanded="false" aria-controls="form" style="margin-bottom:10px;">
+  Nuevo
+</button>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="collapse" id="form">
+          <div class="">
+            <form>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="nombre">Nombre</label>
+                        <input id="nombre" class="form-control" type="text" ng-model="cliente.nombre">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="contacto">Contacto</label>
+                        <input id="contacto" class="form-control" ng-model="cliente.contacto">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="telefono">Telefono</label>
+                        <input type="number" if="telefono" class="form-control" ng-model="cliente.telefono">
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="correo">Correo</label>
+                        <input id="correo" class="form-control" ng-model="cliente.correo">
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="direccion">Dirección</label>
+                        <textarea id="direccion" class="form-control" ng-model="cliente.direccion"></textarea> 
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button type="button" ng-click="save(cliente); cliente='';" class="btn btn-success">Guardar</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+    <table class="table table-striped table-bordered" ng-show="clientes.length > 0">
+        <tr>
+            <th width="20%">Nombre</th>
+            <th width="20%">Contacto</th>
+            <th width="10%">Telefono</th>
+            <th width="20%">Correo</th>
+            <th width="20%">Direccion</th>
+            <th width="10%">Acciones</th>
+        </tr>
+        <tr ng-repeat="cliente in clientes">
+            <td>{{ cliente.nombre }}</td>
+            <td>{{ cliente.contacto }}</td>
+            <td>{{ cliente.telefono }}</td>
+            <td>{{ cliente.correo }}</td>
+            <td>{{ cliente.direccion }}</td>
+            <td>
+                <div class="dropdown">
+                  <button class="btn btn-small btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Acciones
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#/clientes/edit/{{cliente._id}}">Editar</a></li>
+                    <li><a ng-click="remove(cliente)">Eliminar</a></li>
+                  </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="alert alert-danger" ng-show="!clientes.length">No existen Clientes</div>
+    </div>
+</div>
