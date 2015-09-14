@@ -86,7 +86,8 @@
             <th width="20%">Cliente</th>
             <th width="20%">Departamento</th>
             <th width="10%">Fecha</th>
-            <th width="30%">Comentarios</th>
+            <th width="20%">Comentarios</th>
+            <th width="10">Estatus</th>
             <th width="10%">Acciones</th>
         </tr>
         <tr ng-repeat="requisicion in requisiciones">
@@ -95,6 +96,7 @@
             <td>{{ requisicion.departamento }}</td>
             <td>{{ requisicion.fecha }}</td>
             <td>{{ requisicion.comentarios }}</td>
+            <td>{{ requisicion.estatus }}</td>
             <td>
             <div class="dropdown">
               <button class="btn btn-small btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">

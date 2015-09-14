@@ -35,7 +35,7 @@
             <tr ng-repeat="articulo in articulos">
                 <td>{{ articulo.nombre }}</td>
                 <td>{{ articulo.unidad }}</td>
-                <td><a href="#/articulos/edit/{{articulo._id}}" class="btn btn-small btn-info">Edit</a></td>
+                <td><a ng-click="edit(articulo)" class="btn btn-small btn-info">Edit</a></td>
                 <td><button class="btn btn-small btn-danger" ng-click="remove(articulo)">Delete</button></td>
             </tr>
         </table>

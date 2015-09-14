@@ -18,7 +18,7 @@
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="telefono">Telefono</label>
-                        <input type="number" if="telefono" class="form-control" ng-model="cliente.telefono">
+                        <input type="number" id="telefono" class="form-control" ng-model="cliente.telefono">
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="correo">Correo</label>
@@ -61,7 +61,7 @@
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#/clientes/edit/{{cliente._id}}">Editar</a></li>
+                    <li><a href="#/clientes" ng-click="update(cliente._id)">Editar</a></li>
                     <li><a ng-click="remove(cliente)">Eliminar</a></li>
                   </ul>
                 </div>
