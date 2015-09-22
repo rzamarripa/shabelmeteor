@@ -1,4 +1,3 @@
-
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#form" aria-expanded="false" aria-controls="form" style="margin-bottom:10px;">
   Nuevo
 </button>
@@ -18,7 +17,7 @@
                         <label for="cliente">Cliente</label>
                         <ui-select name="cliente" ng-model="requisicion.cliente_id"
                                      theme="bootstrap"
-                                     ng-disabled="!myForm.folio.$dirty"
+                                     ng-disabled="disabled"
                                      reset-search-input="false"
                                      style="width: 300px;" required>
                             <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
@@ -93,7 +92,7 @@
             </table>
             <a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
                 <button ng-disabled="!myForm.$valid" type="button" ng-click="save(requisicion); requisicion='';items='';" class="btn btn-success" ng-show="action">Guardar</button>
-                <button type="button" ng-click="save(requisicion); requisicion='';items='';" class="btn btn-success" ng-show="!action">Actualizar</button>
+                <button type="button" ng-click="save(requisicion);" class="btn btn-success" ng-show="!action">Actualizar</button>
             </form>
           </div>
         </div>
@@ -115,7 +114,7 @@
             <td>{{ requisicion.folio }}</td>
             <td>{{ nombreCliente(requisicion) }}</td>
             <td>{{ requisicion.departamento }}</td>
-            <td>{{ requisicion.fecha }}</td>
+            <td>{{ requisicion.fecha | date:"dd/MM/yyyy" }}</td>
             <td>{{ requisicion.comentarios }}</td>
             <td>{{ requisicion.estatus }}</td>
             <td>
@@ -127,6 +126,7 @@
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li><a ng-click="editar(requisicion._id)">Editar</a></li>
                 <li><a href="#/requisiciones/{{requisicion._id}}">Ver</a></li>
+                <li><a href="#/requisiciones/enviar/{{requisicion._id}}">Enviar</a></li>
                 <li><a href="#/cotizaciones/create/{{requisicion._id}}">Cotizar</a></li>
                 <li><a href="#/requisiciones" ng-click="remove(requisicion)">Eliminar</a></li>
               </ul>
@@ -136,4 +136,5 @@
     </table>
     <div class="alert alert-danger" ng-show="!requisiciones.length">No existen requisiciones</div>
     </div>
-</div>     
+</div>
+<!--<button class="btn btn-danger" ng-click="removeAll()">Borrar tocho</button>-->

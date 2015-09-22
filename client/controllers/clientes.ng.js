@@ -1,9 +1,10 @@
 angular.module("app").controller("clientesCtrl", function($scope, $meteor, $state, $stateParams)
     {
-        $scope.clientes = $meteor.collection(Clientes);
+        $scope.clientes = $meteor.collection(function(){return Clientes.find({estatus: true})});
         $scope.action = true;
         $scope.save = function(cliente)
         {
+            cliente.estatus = true;
              $scope.clientes.save(cliente);
              $scope.action = true;
              $scope.myForm.$setUntouched();
@@ -17,11 +18,17 @@ angular.module("app").controller("clientesCtrl", function($scope, $meteor, $stat
             $scope.cliente = Clientes.findOne({_id:id});
             $scope.action = false;
             $state.go("clientes");
-            $('.collapse').collapse('show');
         };
         
+        $scope.limpiar = function(){
+            $scope.cliente = '';
+            $scope.myForm.$setUntouched();
+            $scope.action = true;
+        }
+
         $scope.remove = function(cliente)
         {
-            $scope.clientes.remove(cliente);
+            cliente.estatus = false;
+            $scope.clientes.save(cliente);
         };
     });

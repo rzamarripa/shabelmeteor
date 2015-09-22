@@ -1,0 +1,38 @@
+<div class="row">
+	<div class="col-sm-12">
+		<form name="myForm">
+			<ui-select multiple name="proveedores" ng-model="enviarRequisicion.proveedores"
+			         theme="bootstrap"
+			         ng-disabled="disabled"
+			         reset-search-input="false"
+			         style="width: 100%" ui-select-required>
+			<ui-select-match placeholder="Seleccione proveedores...">{{$item.nombre}}</ui-select-match>
+			<ui-select-choices repeat="proveedor._id as proveedor in proveedores | filter: $select.search">
+			  <div ng-bind-html="proveedor.nombre | highlight: $select.search"></div>
+			</ui-select-choices>
+			</ui-select>
+			<p ng-show="!myForm.proveedores.$valid && myForm.proveedores.$touched" class="text-danger">Este campo es requerido.</p>
+			<button style="margin-top:5px;" ng-disabled="!myForm.proveedores.$valid" ng-click="save(enviarRequisicion); enviarRequisicion = {};" class="btn btn-primary pull-right">Enviar</button>
+		</form>
+	</div>
+</div>
+<div class="row">
+	<div class="col-sm-12">
+		<table ng-show="requisiciones.length" class="table table-striped table-bordered">
+		  <thead>
+		  	<tr>
+		  	  <th>Proveedor</th>
+		  	  <th>Fecha</th>
+			</tr>
+		  </thead>
+		  <tbody ng-repeat="enviada in enviadas">
+		      <tr ng-repeat="proveedor in enviada.proveedores">
+		        <td>{{nombreProveedor(proveedor)}}</td>
+		      	<td>{{enviada.fecha | date:"dd/MM/yyyy HH:mm:ss"}}</td>
+		      </tr>
+		   </tbody>
+		</table>
+		<div style="margin-top:8px;" class="alert alert-danger" ng-show="!requisiciones.length">No se ha enviado esta requisición</div>
+	</div>
+</div>
+<!--<button class="btn btn-danger" ng-click="removeAll()">Borrar tocho</button>-->

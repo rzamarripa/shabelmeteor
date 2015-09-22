@@ -14,7 +14,7 @@
             <td>{{ cotizacion.folio }}</td>
             <td>{{ nombreCliente(cotizacion) }}</td>
             <td>{{ cotizacion.departamento }}</td>
-            <td>{{ cotizacion.fecha }}</td>
+            <td>{{ cotizacion.fecha | date:"dd/MM/yyyy"}}</td>
             <td>{{ cotizacion.comentarios }}</td>
             <td>{{ cotizacion.estatus }}</td>
             <td>
@@ -24,7 +24,7 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="#/cotizaciones/edit/{{cotizacion._id}}">Editar</a></li>
+                <li><a href="#/cotizaciones/update/{{cotizacion._id}}">Editar</a></li>
                 <li><a href="#/cotizaciones/{{cotizacion._id}}">Ver</a></li>
                 <li><a href="#/cotizaciones" ng-click="remove(cotizacion)">Eliminar</a></li>
               </ul>
@@ -33,6 +33,6 @@
         </tr>
     </table>
     <div class="alert alert-danger" ng-show="!cotizaciones.length">No existen cotizaciones</div>
-    <button class="pull-right btn btn-danger" ng-click="removeAll()">Borrar tocho</button>
+    <!--<button class="pull-right btn btn-danger" ng-click="removeAll()">Borrar tocho</button>-->
     </div>
 </div>

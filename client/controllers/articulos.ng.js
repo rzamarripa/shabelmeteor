@@ -1,9 +1,10 @@
 angular.module("app").controller("articulosCtrl", function($scope, $meteor, $state, $stateParams)
     {
-        $scope.articulos = $meteor.collection(Articulos);
-
+        $scope.articulos = $meteor.collection(function(){return Articulos.find({estatus:true})});
+        $scope.action = true;
         $scope.save = function(articulo)
         {
+            articulo.estatus = true;
              $scope.articulos.save(articulo);
              $scope.myForm.$setUntouched();
              $state.go("articulos");
@@ -14,14 +15,20 @@ angular.module("app").controller("articulosCtrl", function($scope, $meteor, $sta
             $scope.articulo = Articulos.findOne({_id:id});
             $scope.action = false;
             $state.go("articulos");
-            //$('.collapse').collapse('show');
         };
         
         $scope.remove = function(articulo)
         {
-            $scope.articulos.remove(articulo);
+            articulo.estatus = false;
+            $scope.articulos.save(articulo);
         };
         
+        $scope.limpiar = function(){
+            $scope.articulo = '';
+            $scope.myForm.$setUntouched();
+            $scope.action = true;
+        }
+
         $scope.removeAll = function()
         {
             $scope.articulos.remove();

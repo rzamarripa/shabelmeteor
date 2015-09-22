@@ -8,9 +8,9 @@
     	  	  <td><strong>Folio: </strong>{{requisicion.folio}}</td>
     		</tr>
     	    <tr>
-    	      <td class="col-sm-5">{{requisicion.cliente_id}}</td>
+    	      <td class="col-sm-5">{{nombreCliente(requisicion.cliente_id)}}</td>
     	      <td class="col-sm-4">{{requisicion.departamento}}</td>
-    	      <td class="col-sm-3"><strong>Fecha: </strong>{{requisicion.fecha}}</td>
+    	      <td class="col-sm-3"><strong>Fecha: </strong>{{requisicion.fecha | date:"dd/MM/yyyy"}}</td>
     	    </tr>
     	    <tr>
     	      <td colspan="3"><strong>Comentarios: </strong>{{requisicion.comentarios}}</td>
@@ -33,7 +33,7 @@
                 <tr ng-repeat="(key, item) in requisicion.detalle">
                     <td class="col-sm-1">{{key+1}}</td>    
                     <td class="col-sm-1">{{item.cantidad}}</td>    
-                    <td class="col-sm-5">{{item.articulo_id}}</td>
+                    <td class="col-sm-5">{{nombreArticulo(item.articulo_id)}}</td>
                     <td class="col-sm-5">{{item.comentarios}}</td>             
                 </tr>
             </tbody>

@@ -3,23 +3,26 @@
   Nuevo
 </button>
 <div class="row">
-    <div class="col-sm-8">
+    <div class="col-sm-12">
         <div class="collapse" id="form">
           <div class="">
             <form name="myForm">
             <div class="row">
-                    <div class="form-group col-sm-6">
-                        <label for="nombre">Nombre</label>
-                        <input name="nombre" id="nombre" class="form-control" type="text" ng-model="articulo.nombre" required>
-                        <p ng-show="myForm.nombre.$error.required && myForm.nombre.$touched" class="text-danger">Este campo es requerido.</p>
-                    </div>
-                    <div class="form-group col-sm-6">
-                        <label for="unidad">Unidad</label>
-                        <input name="unidad" id="unidad" class="form-control" ng-model="articulo.unidad" required>
-                        <p ng-show="myForm.unidad.$error.required && myForm.unidad.$touched" class="text-danger">Este campo es requerido.</p>
-                    </div>
+                <div class="form-group col-sm-6">
+                    <label for="nombre">Nombre</label>
+                    <input name="nombre" id="nombre" class="form-control" type="text" ng-model="articulo.nombre" required>
+                    <p ng-show="myForm.nombre.$error.required && myForm.nombre.$touched" class="text-danger">Este campo es requerido.</p>
+                </div>
+                <div class="form-group col-sm-6">
+                    <label for="unidad">Unidad</label>
+                    <input name="unidad" id="unidad" class="form-control" ng-model="articulo.unidad" required>
+                    <p ng-show="myForm.unidad.$error.required && myForm.unidad.$touched" class="text-danger">Este campo es requerido.</p>
+                </div>
             </div>
             <button ng-disabled="!myForm.$valid" type="button" ng-click="save(articulo); articulo='';" class="btn btn-success pull-right">Guardar</button>
+            <div ng-show="!action" class="pull-left">
+                    <button  ng-click="limpiar();" class="btn btn-warning">Cancelar</button>
+                </div>
             </form>
           </div>
         </div>
@@ -50,6 +53,7 @@
             </td>
         </tr>
     </table>
-    <div class="alert alert-danger" ng-show="!articulos.length">No existen Articulos</div>
+    <div class="alert alert-danger" ng-show="!articulos.length">No existen Artículos</div>
     </div>
 </div>
+<!--<button class="btn btn-danger" ng-click="removeAll()">Borrar tocho</button>-->

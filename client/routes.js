@@ -41,11 +41,21 @@
                 templateUrl: 'client/views/requisiciones/ver.ng.html',
                 controller: 'requisicionesVerCtrl'
             })
+            .state('requisicionesEnviar', {
+                url: '/requisiciones/enviar/:_id',
+                templateUrl: 'client/views/requisiciones/enviar.ng.html',
+                controller: 'requisicionesEnviarCtrl'
+            })
             /////Cotizaciones//////
             .state('cotizacionCreate', {
                 url: '/cotizaciones/create/:_id',
                 templateUrl: 'client/views/cotizaciones/create.ng.html',
                 controller: 'cotizacionesCtrl',
+            })
+            .state('cotizacionUpdate', {
+                url: '/cotizaciones/update/:_id',
+                templateUrl: 'client/views/cotizaciones/create.ng.html',
+                controller: 'cotizacionesUpdateCtrl',
             })
             .state('cotizacionVer', {
                 url: '/cotizaciones/:_id',
@@ -59,3 +69,14 @@
             });
         $urlRouterProvider.otherwise('/articulos');
     });
+
+angular.module("app").directive('uiSelectRequired', function() {
+  return {
+    require: 'ngModel',
+    link: function(scope, elm, attrs, ctrl) {
+      ctrl.$validators.uiSelectRequired = function(modelValue, viewValue) {
+        return modelValue && modelValue.length;
+      };
+    }
+  };
+});

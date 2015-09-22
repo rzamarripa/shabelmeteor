@@ -8,9 +8,9 @@
     	  	  <td><strong>Folio: </strong>{{cotizacion.folio}}</td>
     		</tr>
     	    <tr>
-    	      <td class="col-sm-5">{{cotizacion.cliente_id}}</td>
+    	      <td class="col-sm-5" ng-cloak>{{nombreCliente(cotizacion.cliente_id)}}</td>
     	      <td class="col-sm-4">{{cotizacion.departamento}}</td>
-    	      <td class="col-sm-3"><strong>Fecha: </strong>{{cotizacion.fecha}}</td>
+    	      <td class="col-sm-3"><strong>Fecha: </strong>{{cotizacion.fecha | date:"dd/MM/yyyy"}}</td>
     	    </tr>
     	    <tr>
     	      <td align="right" class="col-sm-5"><strong>Subtotal: </strong>{{cotizacion.subtotal | currency}}</td>
@@ -40,9 +40,9 @@
             <tbody>
                 <tr ng-repeat="(key, item) in cotizacion.detalle">
                     <td class="col-sm-1">{{key+1}}</td> 
-                    <td class="col-sm-2">{{item.proveedor_id}}</td>     
+                    <td class="col-sm-2" ng-cloak>{{nombreProveedor(item.proveedor_id)}}</td>     
                     <td class="col-sm-1">{{item.cantidad}}</td>    
-                    <td class="col-sm-2">{{item.articulo_id}}</td>
+                    <td class="col-sm-2" ng-cloak>{{nombreArticulo(item.articulo_id)}}</td>
                     <td class="col-sm-2">{{item.comentarios}}</td>
                     <td align="right" class="col-sm-2">{{item.precioFinal | currency}}</td>
                     <td align="right" class="col-sm-2">{{item.importe | currency}}</td>           

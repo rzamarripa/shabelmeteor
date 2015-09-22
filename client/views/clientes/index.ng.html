@@ -40,7 +40,7 @@
                     <button ng-disabled="!myForm.$valid" ng-click="save(cliente); cliente='';" class="btn btn-success">Guardar</button>
                 </div>
                 <div ng-show="!action" class="pull-left">
-                    <button  ng-click="cliente='';" class="btn btn-success">Limpiar</button>
+                    <button  ng-click="limpiar();" class="btn btn-warning">Cancelar</button>
                 </div>
             </form>
           </div>
