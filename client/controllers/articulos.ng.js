@@ -4,18 +4,17 @@ angular.module("app").controller("articulosCtrl", function($scope, $meteor, $sta
 
         $scope.save = function(articulo)
         {
-             $scope.articulos.push(articulo);
+             $scope.articulos.save(articulo);
+             $scope.myForm.$setUntouched();
              $state.go("articulos");
         };
 
-        $scope.edit = function()
+        $scope.update = function(id)
         {
-            $scope.articulo = $meteor.object(articulos, $stateParams.articuloId);
-            $scope.update = function()
-            {
-                $scope.articulo.save();
-                $state.go("articulos");
-            }
+            $scope.articulo = Articulos.findOne({_id:id});
+            $scope.action = false;
+            $state.go("articulos");
+            //$('.collapse').collapse('show');
         };
         
         $scope.remove = function(articulo)

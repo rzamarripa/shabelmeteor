@@ -1,0 +1,83 @@
+
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" style="margin-bottom:10px;" aria-controls="collapseExample">
+  Nuevo
+</button>
+<div class="row">
+    <div class="col-sm-12">
+        <div class="collapse" id="collapseExample">
+          <div class="">
+            <form name="myForm">
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="nombre">Nombre</label>
+                            <input name="nombre" id="nombre" class="form-control" type="text" ng-model="proveedor.nombre" required>
+                            <p ng-show="myForm.nombre.$error.required && myForm.nombre.$touched" class="text-danger">Este campo es requerido.</p>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="contacto">Contacto</label>
+                        <input name="contacto" id="contacto" class="form-control" ng-model="proveedor.contacto" required>
+                        <p ng-show="myForm.contacto.$error.required && myForm.contacto.$touched" class="text-danger">Este campo es requerido.</p>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="form-group col-sm-6">
+                        <label for="telefono">Telefono</label>
+                        <input name="telefono" id="telefono" class="form-control" ng-model="proveedor.telefono" required>
+                        <p ng-show="myForm.telefono.$error.required && myForm.telefono.$touched" class="text-danger">Este campo es requerido.</p>
+                    </div>
+                    <div class="form-group col-sm-6">
+                        <label for="correo">Correo</label>
+                        <input name="correo" type="email" id="correo" class="form-control" ng-model="proveedor.correo" required>
+                        <p ng-show="myForm.correo.$error.required && myForm.correo.$touched" class="text-danger">Este campo es requerido.</p>
+                        <p ng-show="myForm.correo.$error.email && myForm.correo.$touched" class="text-danger">Debes ingresar un correo.</p>
+                    </div>
+                    <div class="form-group col-sm-12">
+                        <label for="direccion">Dirección</label>
+                        <textarea id="direccion" class="form-control" ng-model="proveedor.direccion"></textarea> 
+                    </div>
+                </div>
+                <div class="pull-right">
+                    <button ng-disabled="!myForm.$valid" ng-click="save(proveedor); proveedor='';" class="btn btn-success">Guardar</button>
+                </div>
+                <div ng-show="!action" class="pull-left">
+                    <button  ng-click="proveedor='';" class="btn btn-success">Limpiar</button>
+                </div>
+            </form>
+          </div>
+        </div>
+    </div>
+</div>
+<div class="row">
+    <div class="col-sm-12">
+    <table class="table table-striped table-bordered" ng-show="proveedores.length > 0">
+        <tr>
+            <th width="20%">Nombre</th>
+            <th width="20%">Contacto</th>
+            <th width="10%">Telefono</th>
+            <th width="20%">Correo</th>
+            <th width="20%">Direccion</th>
+            <th width="10%">Acciones</th>
+        </tr>
+        <tr ng-repeat="proveedor in proveedores">
+            <td>{{ proveedor.nombre }}</td>
+            <td>{{ proveedor.contacto }}</td>
+            <td>{{ proveedor.telefono }}</td>
+            <td>{{ proveedor.correo }}</td>
+            <td>{{ proveedor.direccion }}</td>
+            <td>
+                <div class="dropdown">
+                  <button class="btn btn-small btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
+                    Acciones
+                    <span class="caret"></span>
+                  </button>
+                  <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
+                    <li><a href="#/proveedores" ng-click="update(proveedor._id)">Editar</a></li>
+                    <li><a ng-click="remove(proveedor)">Eliminar</a></li>
+                  </ul>
+                </div>
+            </td>
+        </tr>
+    </table>
+    <div class="alert alert-danger" ng-show="!proveedores.length">No existen proveedores</div>
+    </div>
+</div>

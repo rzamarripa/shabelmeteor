@@ -24,15 +24,11 @@
                 templateUrl: 'client/views/clientes/index.ng.html',
                 controller: 'clientesCtrl'
             })
-            .state('clientesAdd', {
-                url: '/clientes-add',
-                templateUrl: 'client/views/clientes/form.ng.html',
-                controller: 'clientesCtrl'
-            })
-            .state('clientesEdit', {
-                url: '/clientes/edit/:articuloId',
-                templateUrl: 'client/views/clientes/update.ng.html',
-                controller: 'clientesCtrl'
+            //////Proveedores////////
+            .state('proveedores', {
+                url: '/proveedores',
+                templateUrl: 'client/views/proveedores/index.ng.html',
+                controller: 'proveedoresCtrl'
             })
             //////Requisiciones//////
             .state('requisiciones', {
@@ -40,11 +36,26 @@
                 templateUrl: 'client/views/requisiciones/index.ng.html',
                 controller: 'requisicionesCtrl'
             })
+            .state('requisicionesVer', {
+                url: '/requisiciones/:_id',
+                templateUrl: 'client/views/requisiciones/ver.ng.html',
+                controller: 'requisicionesVerCtrl'
+            })
             /////Cotizaciones//////
-            .state('cotizaciones', {
+            .state('cotizacionCreate', {
                 url: '/cotizaciones/create/:_id',
                 templateUrl: 'client/views/cotizaciones/create.ng.html',
-                controller: 'cotizacionesCtrl'
+                controller: 'cotizacionesCtrl',
+            })
+            .state('cotizacionVer', {
+                url: '/cotizaciones/:_id',
+                templateUrl: 'client/views/cotizaciones/ver.ng.html',
+                controller: 'cotizacionesVerCtrl',
+            })
+            .state('cotizaciones', {
+                url: '/cotizaciones',
+                templateUrl: 'client/views/cotizaciones/index.ng.html',
+                controller: 'cotizacionesIndexCtrl'
             });
         $urlRouterProvider.otherwise('/articulos');
     });

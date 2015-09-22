@@ -11,3 +11,4 @@ urigo:angular
 angularui:angular-ui-router
 mrt:bootstrap-3
 angularui:ui-select
+angularjs:angular-sanitize

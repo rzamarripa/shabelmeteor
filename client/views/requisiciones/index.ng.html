@@ -6,27 +6,38 @@
     <div class="col-sm-12">
         <div class="collapse" id="form">
           <div class="">
-            <form>
+            <form name="myForm">
                 <div class="row">
                     <div class="form-group col-sm-2">
                         <label for="folio">Folio</label>
-                        <input id="folio" class="form-control" type="text" ng-model="requisicion.folio">
+                        <input name="folio" id="folio" class="form-control" type="text" ng-model="requisicion.folio" required>
+                        <p ng-show="myForm.folio.$error.required && myForm.folio.$touched" class="text-danger">Este campo es requerido.</p>
                     </div>
                    
                       <div class="form-group col-sm-4">
                         <label for="cliente">Cliente</label>
-                        <select id="cliente" class="form-control" ng-model="requisicion.cliente_id">
-                          <option ng-repeat="cliente in clientes" value="{{cliente._id}}">{{cliente.nombre}}</option>
-                        </select>
-                      </div><!--/col-->
-        
+                        <ui-select name="cliente" ng-model="requisicion.cliente_id"
+                                     theme="bootstrap"
+                                     ng-disabled="!myForm.folio.$dirty"
+                                     reset-search-input="false"
+                                     style="width: 300px;" required>
+                            <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
+                            <ui-select-choices repeat="cliente._id as cliente in clientes | filter: $select.search"
+                                     refresh="refreshClientes($select.search)"
+                                     refresh-delay="0">
+                              <div ng-bind-html="cliente.nombre | highlight: $select.search"></div>
+                            </ui-select-choices>
+                          </ui-select>
+                           <p ng-show="myForm.cliente.$error.required && myForm.cliente.$touched" class="text-danger">Este campo es requerido.</p>
+                      </div>       
                     <div class="form-group col-sm-4">
                         <label for="dep">Departamento</label>
-                        <input id="dep" type="text" class="form-control" ng-model="requisicion.departamento">
+                        <input name="departamento" id="dep" type="text" class="form-control" ng-model="requisicion.departamento">
                     </div>
                     <div class="form-group col-sm-2">
                         <label for="fecha">Fecha</label>
-                        <input id="fecha" type="date" class="form-control" ng-model="requisicion.fecha">
+                        <input name="fecha" id="fecha" type="date" class="form-control" ng-model="requisicion.fecha" required>
+                        <p ng-show="myForm.fecha.$error.required && myForm.fecha.$touched" class="text-danger">Este campo es requerido.</p>
                     </div>
                 </div>
                 <div class="row">
@@ -46,18 +57,28 @@
                     </tr>
                 </thead>
                 <tbody>
-                    <tr ng-repeat="item in items">
+                    <tr ng-repeat="(key,item) in items">
                         <td class="col-sm-2">
                             <div class="col-sm-12" >
-                                <input type="text" ng-model="item.cantidad" class="form-control" />
+                                <input name="cantidad{{key}}" type="number" min="1" ng-model="item.cantidad" class="form-control" required/>
+                                <p ng-show="myForm.cantidad{{key}}.$error.required && myForm.cantidad{{key}}.$touched" class="text-danger">Este campo es requerido.</p>
+                                <p ng-show="myForm.cantidad{{key}}.$error.min && myForm.cantidad{{key}}.$touched" class="text-danger">Debe ser mayor a 0.</p>
                             </div>
                         </td>
                         <td>
-                            <span class="control-group" ng-class="{true: 'error', false: ''}[item.error.articulo]">
-                                <select class="form-control" ng-model="item.articulo_id">
-                                  <option ng-repeat="articulo in articulos" value="{{articulo._id}}" ng-selected="selected(articulo._id,item.articulo_id)">{{articulo.nombre}}</option>
-                                </select>
-                            </span>
+                            <ui-select name="articulo{{key}}" ng-model="item.articulo_id"
+                                 theme="bootstrap"
+                                 ng-disabled="disabled"
+                                 reset-search-input="false"
+                                 style="width: 300px;" required>
+                                <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
+                                <ui-select-choices repeat="articulo._id as articulo in articulos | filter: $select.search"
+                                         refresh="refreshArticulos($select.search)"
+                                         refresh-delay="0">
+                                  <div ng-bind-html="articulo.nombre | highlight: $select.search"></div>
+                                </ui-select-choices>
+                            </ui-select>
+                            <p ng-show="myForm.articulo{{key}}.$error.required && myForm.articulo{{key}}.$touched" class="text-danger">Este campo es requerido.</p>
                         </td>
                         <td>
                             <div class="col-sm-12">
@@ -71,8 +92,8 @@
                 </tbody>
             </table>
             <a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
-                <button type="button" ng-click="save(requisicion); requisicion='';" class="btn btn-success" ng-show="action">Guardar</button>
-                <button type="button" ng-click="save(requisicion); requisicion='';" class="btn btn-success" ng-show="!action">Actualizar</button>
+                <button ng-disabled="!myForm.$valid" type="button" ng-click="save(requisicion); requisicion='';items='';" class="btn btn-success" ng-show="action">Guardar</button>
+                <button type="button" ng-click="save(requisicion); requisicion='';items='';" class="btn btn-success" ng-show="!action">Actualizar</button>
             </form>
           </div>
         </div>
@@ -105,6 +126,7 @@
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
                 <li><a ng-click="editar(requisicion._id)">Editar</a></li>
+                <li><a href="#/requisiciones/{{requisicion._id}}">Ver</a></li>
                 <li><a href="#/cotizaciones/create/{{requisicion._id}}">Cotizar</a></li>
                 <li><a href="#/requisiciones" ng-click="remove(requisicion)">Eliminar</a></li>
               </ul>
@@ -114,4 +136,4 @@
     </table>
     <div class="alert alert-danger" ng-show="!requisiciones.length">No existen requisiciones</div>
     </div>
-</div>
+</div>     

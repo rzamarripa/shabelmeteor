@@ -2,18 +2,22 @@ angular.module("app").controller("cotizacionesCtrl", function($scope, $meteor, $
 {
 $scope.articulos = $meteor.collection(Articulos);
 $scope.clientes = $meteor.collection(Clientes);
-$scope.cotizacion = Requisiciones.findOne({_id:$stateParams._id},{fields:{_id:0}});
+$scope.proveedores = $meteor.collection(Proveedores);
+Session.set('cotizacion',Requisiciones.findOne({_id:$stateParams._id},{fields:{_id:0}}));
+$scope.cotizacion = Session.get('cotizacion');
 $scope.items = $scope.cotizacion.detalle;
 $scope.cotizacion.porcentajeGeneral = 0;
 angular.forEach($scope.items, function (item) {
 		item.porcentaje = 0;
 		item.precioUnitario = 0;
+		item.precioFinal = 0;
+		item.importe = 0;
 	});
 $scope.action = true;
 $scope.porcentajeGeneral=0;
 var empty_item = {
     cantidad: 0,
-    precio:0,
+    precioFinal:0,
 	importe:0,
 	precioUnitario:0,
 	porcentaje:0,
@@ -38,9 +42,6 @@ $scope.cancelar = function (item, e) {
     var i = $scope.items.indexOf(item);
     if (i >= 0) $scope.items.splice(i, 1);
 };
-$scope.selected = function(variable1, variable2){
-    if(variable1 == variable2)return 'selected';
-};
 
 $scope.getTotal = function(){
 	$scope.cotizacion.subtotal = 0;
@@ -53,9 +54,30 @@ $scope.getTotal = function(){
 			var importe = 0;
 			importe = item.precioFinal * item.cantidad;
 			item.importe = importe;
-			$scope.cotizacion.subtotal += item.importe;
+			if(!isNaN(item.importe)){$scope.cotizacion.subtotal += item.importe};
 	});
 	$scope.cotizacion.iva = $scope.cotizacion.subtotal*.16;
 	$scope.cotizacion.total = $scope.cotizacion.subtotal + $scope.cotizacion.iva;
 };
+});
+
+
+
+angular.module("app").controller("cotizacionesIndexCtrl", function($scope, $meteor, $state, $stateParams)
+{
+	$scope.cotizaciones = $meteor.collection(Cotizaciones);
+
+	$scope.removeAll = function(){
+		$scope.cotizaciones.remove();
+	}
+	$scope.nombreCliente = function(cotizacion){
+          var cliente = Clientes.findOne({_id:cotizacion.cliente_id});
+           return cliente.nombre;
+
+        };
+});
+
+angular.module("app").controller("cotizacionesVerCtrl", function($scope, $meteor, $state, $stateParams)
+{
+	$scope.cotizacion = Cotizaciones.findOne({_id:$stateParams._id});
 });

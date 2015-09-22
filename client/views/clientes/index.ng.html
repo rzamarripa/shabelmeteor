@@ -1,28 +1,35 @@
 
-<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#form" aria-expanded="false" aria-controls="form" style="margin-bottom:10px;">
+<button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" style="margin-bottom:10px;" aria-controls="collapseExample">
   Nuevo
 </button>
 <div class="row">
     <div class="col-sm-12">
-        <div class="collapse" id="form">
+        <div class="collapse" id="collapseExample">
           <div class="">
-            <form>
+            <form name="myForm">
                 <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="nombre">Nombre</label>
-                        <input id="nombre" class="form-control" type="text" ng-model="cliente.nombre">
+                            <input name="nombre" id="nombre" class="form-control" type="text" ng-model="cliente.nombre" required>
+                            <p ng-show="myForm.nombre.$error.required && myForm.nombre.$touched" class="text-danger">Este campo es requerido.</p>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="contacto">Contacto</label>
-                        <input id="contacto" class="form-control" ng-model="cliente.contacto">
+                        <input name="contacto" id="contacto" class="form-control" ng-model="cliente.contacto" required>
+                        <p ng-show="myForm.contacto.$error.required && myForm.contacto.$touched" class="text-danger">Este campo es requerido.</p>
                     </div>
+                </div>
+                <div class="row">
                     <div class="form-group col-sm-6">
                         <label for="telefono">Telefono</label>
-                        <input type="number" id="telefono" class="form-control" ng-model="cliente.telefono">
+                        <input name="telefono" id="telefono" class="form-control" ng-model="cliente.telefono" required>
+                        <p ng-show="myForm.telefono.$error.required && myForm.telefono.$touched" class="text-danger">Este campo es requerido.</p>
                     </div>
                     <div class="form-group col-sm-6">
                         <label for="correo">Correo</label>
-                        <input id="correo" class="form-control" ng-model="cliente.correo">
+                        <input name="correo" type="email" id="correo" class="form-control" ng-model="cliente.correo" required>
+                        <p ng-show="myForm.correo.$error.required && myForm.correo.$touched" class="text-danger">Este campo es requerido.</p>
+                        <p ng-show="myForm.correo.$error.email && myForm.correo.$touched" class="text-danger">Debes ingresar un correo.</p>
                     </div>
                     <div class="form-group col-sm-12">
                         <label for="direccion">Dirección</label>
@@ -30,7 +37,10 @@
                     </div>
                 </div>
                 <div class="pull-right">
-                    <button type="button" ng-click="save(cliente); cliente='';" class="btn btn-success">Guardar</button>
+                    <button ng-disabled="!myForm.$valid" ng-click="save(cliente); cliente='';" class="btn btn-success">Guardar</button>
+                </div>
+                <div ng-show="!action" class="pull-left">
+                    <button  ng-click="cliente='';" class="btn btn-success">Limpiar</button>
                 </div>
             </form>
           </div>

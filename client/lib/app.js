@@ -1,1 +1,1 @@
-angular.module("app", ["angular-meteor","ui.router"]);
+angular.module("app", ["angular-meteor","ui.router","ui.select","ngSanitize"]);

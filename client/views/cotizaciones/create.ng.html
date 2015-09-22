@@ -1,43 +1,53 @@
 <div class="">
-<form>
+<form name="myForm">
     <div class="row">
         <div class="form-group col-sm-2">
             <label for="folio">Folio</label>
-            <input id="folio" class="form-control" type="text" ng-model="cotizacion.folio">
+            <input id="folio" class="form-control" type="text" ng-model="cotizacion.folio" readOnly>
         </div>
        
           <div class="form-group col-sm-4">
             <label for="cliente">Cliente</label>
-            <select id="cliente" class="form-control" ng-model="cotizacion.cliente_id">
-              <option ng-repeat="cliente in clientes" value="{{cliente._id}}" ng-selected="selected(cliente._id,cotizacion.cliente_id)">{{cliente.nombre}}</option>
-            </select>
+            <ui-select ng-model="cotizacion.cliente_id"
+                         theme="bootstrap"
+                         ng-disabled="true"
+                         reset-search-input="false"
+                         style="width: 300px;">
+                <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
+                <ui-select-choices repeat="cliente._id as cliente in clientes | filter: $select.search"
+                         refresh="refreshClientes($select.search)"
+                         refresh-delay="0">
+                  <div ng-bind-html="cliente.nombre | highlight: $select.search"></div>
+                </ui-select-choices>
+              </ui-select>
           </div><!--/col-->
 
         <div class="form-group col-sm-4">
             <label for="dep">Departamento</label>
-            <input id="dep" type="text" class="form-control" ng-model="cotizacion.departamento">
+            <input id="dep" type="text" class="form-control" ng-model="cotizacion.departamento" readonly>
         </div>
         <div class="form-group col-sm-2">
             <label for="fecha">Fecha</label>
-            <input id="fecha" type="date" class="form-control" ng-model="cotizacion.fecha">
+            <input name="fecha" id="fecha" type="date" class="form-control" ng-model="cotizacion.fecha" required>
+            <p ng-show="myForm.fecha.$error.required && myForm.fecha.$touched" class="text-danger">Este campo es requerido.</p>
         </div>
     </div>
     <div class="row">
         <div class="form-group col-sm-3">
             <label for="porcentaje">Porcentaje General</label>
-            <input id="porcentaje" class="form-control" type="number" ng-model="cotizacion.porcentajeGeneral" min="0"/>
+            <input ng-change="getTotal()" id="porcentaje" class="form-control" type="number" ng-model="cotizacion.porcentajeGeneral" min="0"/>
         </div>
         <div class="form-group col-sm-3">
-            <label for="subtotal">Subtotal</label>
-            <input id="subtotal" class="form-control" type="text" ng-model="cotizacion.subtotal" value="{{ getTotal()[0] }}" ng-cloak readOnly/>
+            <label for="subtotal">Subtotal:</label>
+            <span id="subtotal"> {{cotizacion.subtotal | currency}} </span>
         </div>
         <div class="form-group col-sm-3">
-            <label for="iva">Iva</label>
-            <input id="iva" class="form-control" type="text" ng-model="cotizacion.iva" value="{{ getTotal()[1] }}" ng-cloak readOnly/>
+            <label for="iva">Iva:</label>
+            <span id="iva"> {{cotizacion.iva | currency}} </span>
         </div>
         <div class="form-group col-sm-3">
-            <label for="total">Total</label>
-            <input id="total" class="form-control" type="text" ng-model="cotizacion.total" value="{{ getTotal()[2] }}" ng-cloak readOnly/>
+            <label for="total">Total:</label>
+            <span id="total"> {{cotizacion.total | currency}} </span>
         </div>
     </div>
     <div class="row">
@@ -50,29 +60,55 @@
     <table class="table table-bordered table-striped">
     <thead>
         <tr>
-            <th>Cantidad</th>
-            <th>Descripción</th>
-            <th>Observaciones</th>
-            <th>Precio Unit.</th>
-            <th>Porcentaje</th>
-            <th>Precio U.Final</th>
-            <th>Importe</th>
-            <th></th>
+            <th width="20%">Proveedor</th>
+            <th width="5%">Cantidad</th>
+            <th width="20%">Articulo</th>
+            <th width="15%">Observaciones</th>
+            <th width="10%">Precio Unit.</th>
+            <th width="5%">Porcentaje</th>
+            <th width="10%">Precio U.Final</th>
+            <th width="10%">Importe</th>
+            <th width="5%"></th>
         </tr>
     </thead>
     <tbody>
-        <tr ng-repeat="item in items">
+        <tr ng-repeat="(key, item) in items">
+            <td>
+                <ui-select name="proveedor{{key}}" ng-model="item.proveedor_id"
+                     theme="bootstrap"
+                     ng-disabled="disabled"
+                     reset-search-input="false"
+                     style="width: 100%" required>
+                    <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
+                    <ui-select-choices repeat="proveedor._id as proveedor in proveedores | filter: $select.search"
+                             refresh="refressProveedores($select.search)"
+                             refresh-delay="0">
+                      <div ng-bind-html="proveedor.nombre | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <p ng-show="myForm.proveedor{{key}}.$error.required && myForm.proveedor{{key}}.$touched" class="text-danger">Este campo es requerido.</p>
+            </td>
             <td class="col-sm-2">
                 <div class="col-sm-12" >
-                    <input type="text" ng-model="item.cantidad" class="form-control" min="0" />
+                    <input ng-change="getTotal()" name="cantidad{{key}}" type="number" min="1" ng-model="item.cantidad" class="form-control" required/>
+                    <p ng-show="myForm.cantidad{{key}}.$error.required && myForm.cantidad{{key}}.$touched" class="text-danger">Este campo es requerido.</p>
+                    <p ng-show="myForm.cantidad{{key}}.$error.min && myForm.cantidad{{key}}.$touched" class="text-danger">Debe ser mayor a 0.</p>
                 </div>
             </td>
             <td>
-                <span class="control-group" ng-class="{true: 'error', false: ''}[item.error.articulo]">
-                    <select class="form-control" ng-model="item.articulo_id">
-                      <option ng-repeat="articulo in articulos" value="{{articulo._id}}" ng-selected="selected(articulo._id,item.articulo_id)">{{articulo.nombre}}</option>
-                    </select>
-                </span>
+                <ui-select name="articulo{{key}}" ng-model="item.articulo_id"
+                     theme="bootstrap"
+                     ng-disabled="disabled"
+                     reset-search-input="false"
+                     style="width: 100%" required>
+                    <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
+                    <ui-select-choices repeat="articulo._id as articulo in articulos | filter: $select.search"
+                             refresh="refreshArticulos($select.search)"
+                             refresh-delay="0">
+                      <div ng-bind-html="articulo.nombre | highlight: $select.search"></div>
+                    </ui-select-choices>
+                </ui-select>
+                <p ng-show="myForm.articulo{{key}}.$error.required && myForm.articulo{{key}}.$touched" class="text-danger">Este campo es requerido.</p>
             </td>
             <td>
                 <div class="col-sm-12">
@@ -81,31 +117,33 @@
             </td>
             <td class="col-sm-1">
                 <div>
-                    <input type="number" ng-model="item.precioUnitario" class="form-control" min="0"  />
+                    <input ng-change="getTotal()" name="precioUnitario{{key}}" type="number" min="1" ng-model="item.precioUnitario" class="form-control" required/>
+                    <p ng-show="myForm.precioUnitario{{key}}.$error.required && myForm.precioUnitario{{key}}.$touched" class="text-danger">Este campo es requerido.</p>
+                    <p ng-show="myForm.precioUnitario{{key}}.$error.min && myForm.precioUnitario{{key}}.$touched" class="text-danger">Debe ser mayor a 0.</p>
                 </div>
             </td>
             <td class="col-sm-1">
                 <div>
-                    <input type="number" ng-model="item.porcentaje" class="form-control" min="0"/>
+                    <input ng-change="getTotal()" type="number" ng-model="item.porcentaje" class="form-control" min="0"/>
                 </div>
             </td>
             <td class="col-sm-1">
                 <div>
-                    <input type="number" ng-model="item.precioFinal" class="form-control" min="0" value="{{getTotal()}}" readOnly />
+                    <p>{{item.precioFinal | currency}}</p>
                 </div>
             </td>
             <td class="col-sm-1">
                 <div>
-                    <input type="number" ng-model="item.importe" class="form-control" min="0" value="{{getTotal()}}" readonly/>
+                    <p>{{item.importe | currency}}</p>
                 </div>
             </td>
             <td>
-                <button ng-click="cancelar(item, $event)" class="btn btn-mini btn-danger">Cancelar</button>
+                <button ng-click="cancelar(item, $event)" class="btn btn-mini btn-danger"><li class="fa fa-minus"></li></button>
             </td>
         </tr>
     </tbody>
 </table>
 <a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
-    <button type="button" ng-click="save(cotizacion); cotizacion='';" class="btn btn-success">Guardar</button>
+    <button ng-disabled="!myForm.$valid" type="button" ng-click="save(cotizacion); cotizacion='';" class="btn btn-success">Guardar</button>
 </form>
 </div>

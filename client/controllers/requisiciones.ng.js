@@ -1,5 +1,5 @@
 angular.module("app").controller("requisicionesCtrl", function($scope, $meteor, $state, $stateParams)
-    {
+    { 
         $scope.articulos = $meteor.collection(Articulos);
         $scope.clientes = $meteor.collection(Clientes);
         $scope.requisiciones = $meteor.collection(Requisiciones);
@@ -13,13 +13,17 @@ angular.module("app").controller("requisicionesCtrl", function($scope, $meteor, 
         {
             requisicion.detalle = $scope.items;
             $scope.requisiciones.save(requisicion);
+            $scope.myForm.$setUntouched();
+            $scope.myForm.$setPristine();
             $state.go("requisiciones");
         };
 
         $scope.editar = function(id)
          {
+
             $scope.requisicion = Requisiciones.findOne({_id:id});
             //$meteor.object(Requisiciones, id,false);
+            //console.log($scope.requisicion);
             $scope.items = $scope.requisicion.detalle;
             $scope.action = false;
             //$scope.action = false;
@@ -54,10 +58,8 @@ angular.module("app").controller("requisicionesCtrl", function($scope, $meteor, 
            return cliente.nombre;
 
         };
-        $scope.selected = function(variable1, variable2){
-            if(variable1 == variable2)return 'selected';
-        };
-        $(document).ready(function() {
-            $(".select2").select2();   
-        });
     });
+angular.module("app").controller("requisicionesVerCtrl", function($scope, $meteor, $state, $stateParams)
+{ 
+    $scope.requisicion = Requisiciones.findOne({_id:$stateParams._id});
+});
