@@ -4,3 +4,4 @@ Requisiciones = new Mongo.Collection("requisiciones");
 Cotizaciones = new Mongo.Collection("cotizaciones");
 Proveedores = new Mongo.Collection("proveedores");
 RequisicionesToProveedores = new Mongo.Collection("requisicionestoproveedores");
+Empresas = new Mongo.Collection("empresas");

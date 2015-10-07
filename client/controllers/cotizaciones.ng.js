@@ -1,71 +1,76 @@
-angular.module("app").controller("cotizacionesCtrl", function($scope, $meteor, $state, $stateParams)
+angular.module("app").controller("cotizacionesCtrl", function($scope, $meteor, $state, $stateParams,requisicion)
 {
-$scope.articulos = $meteor.collection(Articulos);
-$scope.clientes = $meteor.collection(Clientes);
-$scope.proveedores = $meteor.collection(Proveedores);
-Session.set('cotizacion',Requisiciones.findOne({_id:$stateParams._id},{fields:{_id:0}}));
-$scope.cotizacion = Session.get('cotizacion');
-$scope.items = $scope.cotizacion.detalle;
-$scope.cotizacion.porcentajeGeneral = 0;
-angular.forEach($scope.items, function (item) {
-		item.porcentaje = 0;
-		item.precioUnitario = 0;
-		item.precioFinal = 0;
-		item.importe = 0;
-	});
-$scope.action = true;
-$scope.porcentajeGeneral=0;
-var empty_item = {
-    cantidad: 0,
-    precioFinal:0,
-	importe:0,
-	precioUnitario:0,
-	porcentaje:0,
-};
-
-$scope.save = function(cotizacion)
-{
-    cotizacion.detalle = angular.copy($scope.items);
-    console.log(cotizacion);
-    Cotizaciones.insert(cotizacion);
-    $state.go("cotizaciones");
-};
-
-$scope.addItem = function() {
-    $scope.items.push(angular.copy(empty_item));
-};
-
-$scope.cancelar = function (item, e) {
-    e.preventDefault();
-    var c = confirm('¿Está seguro de remover este artículo?');
-    if (!c) return;
-    var i = $scope.items.indexOf(item);
-    if (i >= 0) $scope.items.splice(i, 1);
-};
-
-$scope.getTotal = function(){
-	$scope.cotizacion.subtotal = 0;
+//Session.set('cotizacion',Requisiciones.findOne({_id:$stateParams._id},{fields:{_id:0,fecha:0,comentarios:0}}));
+//$scope.cotizacion = Session.get('cotizacion');
+	$scope.articulos = $meteor.collection(Articulos);
+	$scope.proveedores = $meteor.collection(function() { return Proveedores.find({estatus:true})});
+	$scope.cotizacion = requisicion.value;
+	$scope.items = $scope.cotizacion.detalle;
+	$scope.cotizacion.porcentajeGeneral = 0;
 	angular.forEach($scope.items, function (item) {
-		var precioFinal = 0;
-			if($scope.cotizacion.porcentajeGeneral === null && item.porcentaje === null){precioFinal = item.precioUnitario;}
-			else if($scope.cotizacion.porcentajeGeneral === null){precioFinal = ((item.precioUnitario * item.porcentaje)/100) + item.precioUnitario;}
-			else if($scope.cotizacion.porcentajeGeneral >= 0){precioFinal = ((item.precioUnitario * (item.porcentaje+parseFloat($scope.cotizacion.porcentajeGeneral)))/100) + item.precioUnitario;}
-			item.precioFinal = precioFinal;
-			var importe = 0;
-			importe = item.precioFinal * item.cantidad;
-			item.importe = importe;
-			if(!isNaN(item.importe)){$scope.cotizacion.subtotal += item.importe};
-	});
-	$scope.cotizacion.iva = $scope.cotizacion.subtotal*.16;
-	$scope.cotizacion.total = $scope.cotizacion.subtotal + $scope.cotizacion.iva;
-};
+			item.porcentaje = 0;
+			item.precioUnitario = 0;
+			item.precioFinal = 0;
+			item.importe = 0;
+		});
+	$scope.action = true;
+	$scope.porcentajeGeneral=0;
+	var empty_item = {
+	    cantidad: 0,
+	    precioFinal:0,
+		importe:0,
+		precioUnitario:0,
+		porcentaje:0,
+	};
+
+	$scope.save = function(cotizacion)
+	{
+	    cotizacion.detalle = angular.copy($scope.items);
+	    cotizacion.empresa_id = $scope.currentUser.empresa_id;
+	    cotizacion.createdBy = $scope.currentUser._id;
+	    console.log(cotizacion);
+	    Cotizaciones.insert(cotizacion);
+	    $state.go("cotizaciones");
+	};
+
+	$scope.addItem = function() {
+	    $scope.items.push(angular.copy(empty_item));
+	};
+
+	$scope.cancelar = function (item, e) {
+	    e.preventDefault();
+	    var c = confirm('¿Está seguro de remover este artículo?');
+	    if (!c) return;
+	    var i = $scope.items.indexOf(item);
+	    if (i >= 0) $scope.items.splice(i, 1);
+	};
+	$scope.nombreCliente = function(cliente_id){
+	          var cliente = Clientes.findOne({_id:cliente_id});
+	           return cliente.nombre;
+	        };
+	$scope.getTotal = function(){
+		$scope.cotizacion.subtotal = 0;
+		angular.forEach($scope.items, function (item) {
+			var precioFinal = 0;
+				if($scope.cotizacion.porcentajeGeneral === null && item.porcentaje === null){precioFinal = item.precioUnitario;}
+				else if($scope.cotizacion.porcentajeGeneral === null){precioFinal = ((item.precioUnitario * item.porcentaje)/100) + item.precioUnitario;}
+				else if($scope.cotizacion.porcentajeGeneral >= 0){precioFinal = ((item.precioUnitario * (item.porcentaje+parseFloat($scope.cotizacion.porcentajeGeneral)))/100) + item.precioUnitario;}
+				item.precioFinal = precioFinal;
+				var importe = 0;
+				importe = item.precioFinal * item.cantidad;
+				item.importe = importe;
+				if(!isNaN(item.importe)){$scope.cotizacion.subtotal += item.importe};
+		});
+		$scope.cotizacion.iva = $scope.cotizacion.subtotal*.16;
+		$scope.cotizacion.total = $scope.cotizacion.subtotal + $scope.cotizacion.iva;
+	};
 });
 
 
 
 angular.module("app").controller("cotizacionesIndexCtrl", function($scope, $meteor, $state, $stateParams)
 {
-	$scope.cotizaciones = $meteor.collection(function(){return Cotizaciones.find({estatus:true})});
+	$scope.cotizaciones = $meteor.collection(function(){return Cotizaciones.find({estatus:true, empresa_id: $scope.currentUser.empresa_id})});
 
 	$scope.removeAll = function(){
 		$scope.cotizaciones.remove();
@@ -97,60 +102,81 @@ angular.module("app").controller("cotizacionesVerCtrl", function($scope, $meteor
       var proveedor = Proveedores.findOne({_id:proveedor_id});
        return proveedor.nombre;
     };
+    $scope.crearPdf = function(){
+    	var pdf = new jsPDF('p','pt', 'letter');
+    	var specialElementHandlers = { 
+		    '#editor': function (element, renderer) { 
+		        return true;
+		    } 
+		};
+      	pdf.fromHTML($('#content').html(), 75, 20, { 
+	        'width': 522, 
+	            'elementHandlers': specialElementHandlers
+	    }); 
+	    pdf.save('cotizacion.pdf'); 
+    };
 });
 
 angular.module("app").controller("cotizacionesUpdateCtrl", function($scope, $meteor, $state, $stateParams)
 {
-$scope.articulos = $meteor.collection(Articulos);
-$scope.clientes = $meteor.collection(Clientes);
-$scope.proveedores = $meteor.collection(Proveedores);
-$scope.cotizacion = Cotizaciones.findOne({_id:$stateParams._id});
-console.log($scope.cotizacion);
-$scope.items = $scope.cotizacion.detalle;
-$scope.action = true;
+	$scope.articulos = $meteor.collection(Articulos);
+	$scope.clientes = $meteor.collection(Clientes);
+	$scope.proveedores = $meteor.collection(Proveedores);
+	$scope.cotizacion = Cotizaciones.findOne({_id:$stateParams._id});
+	console.log($scope.cotizacion);
+	$scope.items = $scope.cotizacion.detalle;
+	$scope.action = false;
 
-var empty_item = {
-    cantidad: 0,
-    precioFinal:0,
-	importe:0,
-	precioUnitario:0,
-	porcentaje:0,
-};
+	var empty_item = {
+	    cantidad: 0,
+	    precioFinal:0,
+		importe:0,
+		precioUnitario:0,
+		porcentaje:0,
+	};
 
-$scope.save = function(cotizacion)
-{
-    cotizacion.detalle = angular.copy($scope.items);
-    console.log(cotizacion);
-    Cotizaciones.update(cotizacion._id, cotizacion);
-    $state.go("cotizaciones");
-};
+	$scope.save = function(cotizacion)
+	{
+	    cotizacion.detalle = angular.copy($scope.items);
+	    cotizacion.updatedBy = $scope.currentUser._id;
+	    console.log(cotizacion);
+	    Cotizaciones.update(cotizacion._id, cotizacion);
+	    $state.go("cotizaciones");
+	};
+	$scope.limpiar = function()
+	{
+		$state.go("cotizaciones");
+	};
 
-$scope.addItem = function() {
-    $scope.items.push(angular.copy(empty_item));
-};
+	$scope.addItem = function() {
+	    $scope.items.push(angular.copy(empty_item));
+	};
 
-$scope.cancelar = function (item, e) {
-    e.preventDefault();
-    var c = confirm('¿Está seguro de remover este artículo?');
-    if (!c) return;
-    var i = $scope.items.indexOf(item);
-    if (i >= 0) $scope.items.splice(i, 1);
-};
-
-$scope.getTotal = function(){
-	$scope.cotizacion.subtotal = 0;
-	angular.forEach($scope.items, function (item) {
-		var precioFinal = 0;
-			if($scope.cotizacion.porcentajeGeneral === null && item.porcentaje === null){precioFinal = item.precioUnitario;}
-			else if($scope.cotizacion.porcentajeGeneral === null){precioFinal = ((item.precioUnitario * item.porcentaje)/100) + item.precioUnitario;}
-			else if($scope.cotizacion.porcentajeGeneral >= 0){precioFinal = ((item.precioUnitario * (item.porcentaje+parseFloat($scope.cotizacion.porcentajeGeneral)))/100) + item.precioUnitario;}
-			item.precioFinal = precioFinal;
-			var importe = 0;
-			importe = item.precioFinal * item.cantidad;
-			item.importe = importe;
-			if(!isNaN(item.importe)){$scope.cotizacion.subtotal += item.importe};
-	});
-	$scope.cotizacion.iva = $scope.cotizacion.subtotal*.16;
-	$scope.cotizacion.total = $scope.cotizacion.subtotal + $scope.cotizacion.iva;
-};
+	$scope.cancelar = function (item, e) {
+	    e.preventDefault();
+	    var c = confirm('¿Está seguro de remover este artículo?');
+	    if (!c) return;
+	    var i = $scope.items.indexOf(item);
+	    if (i >= 0) $scope.items.splice(i, 1);
+	};
+	$scope.nombreCliente = function(cliente_id){
+	          var cliente = Clientes.findOne({_id:cliente_id});
+	           return cliente.nombre;
+	        };
+	$scope.getTotal = function(){
+		$scope.cotizacion.subtotal = 0;
+		angular.forEach($scope.items, function (item) {
+			var precioFinal = 0;
+				if($scope.cotizacion.porcentajeGeneral === null && item.porcentaje === null){precioFinal = item.precioUnitario;}
+				else if($scope.cotizacion.porcentajeGeneral === null){precioFinal = ((item.precioUnitario * item.porcentaje)/100) + item.precioUnitario;}
+				else if($scope.cotizacion.porcentajeGeneral >= 0){precioFinal = ((item.precioUnitario * (item.porcentaje+parseFloat($scope.cotizacion.porcentajeGeneral)))/100) + item.precioUnitario;}
+				item.precioFinal = precioFinal;
+				var importe = 0;
+				importe = item.precioFinal * item.cantidad;
+				item.importe = importe;
+				if(!isNaN(item.importe)){$scope.cotizacion.subtotal += item.importe};
+		});
+		$scope.cotizacion.iva = $scope.cotizacion.subtotal*.16;
+		$scope.cotizacion.total = $scope.cotizacion.subtotal + $scope.cotizacion.iva;
+	};
 });

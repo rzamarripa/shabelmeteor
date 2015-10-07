@@ -1,4 +1,4 @@
-<div class="row" id="content">
+<div class="row">
     <div class="col-sm-12">
     	<table class="table table-condensed table-bordered">
     	  <tbody>
@@ -24,31 +24,24 @@
     	</table>
     </div>
  
-    <div class="col-sm-12">     
+    <div class="col-sm-12" ng-repeat="(key, proveedor) in ordenPorProveedor" id="content{{key}}">
+    <h2>{{nombreProveedor(proveedor[0].proveedor_id)}}</h2>    
         <table class="table table-striped table-bordered table-hover table-condensed">
             <thead>
                 <tr>
-                    <th>No.</th>
-                    <th>Proveedor</th>
                     <th>Cantidad</th>
                     <th>Artículo</th>
                     <th>Observaciones</th>
-                    <th>Precio Unitario</th>
-                    <th>Importe</th>
                 </tr>
             </thead>
             <tbody>
-                <tr ng-repeat="(key, item) in cotizacion.detalle">
-                    <td style="width:5%;" class="col-sm-1">{{key+1}}</td> 
-                    <td style="width:20%;" class="col-sm-2" ng-cloak>{{nombreProveedor(item.proveedor_id)}}</td>     
-                    <td style="width:10%;" class="col-sm-1">{{item.cantidad}}</td>    
-                    <td style="width:15%;" class="col-sm-2" ng-cloak>{{nombreArticulo(item.articulo_id)}}</td>
-                    <td style="width:20%;" class="col-sm-2">{{item.comentarios}}</td>
-                    <td style="width:15%;" align="right" class="col-sm-2">{{item.precioFinal | currency}}</td>
-                    <td style="width:15%;" align="right" class="col-sm-2">{{item.importe | currency}}</td>           
+                <tr ng-repeat="item in ordenPorProveedor[key]">    
+                    <td class="col-sm-1">{{item.cantidad}}</td>
+                    <td class="col-sm-2" ng-cloak>{{nombreArticulo(item.articulo_id)}}</td>
+                    <td class="col-sm-2">{{item.comentarios}}</td>       
                 </tr>
             </tbody>
         </table>
+        <a ng-click="crearPdf(key)" class="btn btn-primary pull-right"><li class="fa fa-file-pdf-o"></li></a>
     </div>
 </div>
-<button class="btn btn-primary pull-right" ng-click="crearPdf()">Exportar a PDF</button>

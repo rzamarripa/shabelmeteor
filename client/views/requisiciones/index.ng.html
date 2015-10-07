@@ -1,3 +1,9 @@
+<div style="margin-top:-20px;" class="row">
+    <div class="col-sm-12">
+        <h3 class="tag-title">Requisiciones</h3>
+        <hr />
+    </div>
+</div>
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#form" aria-expanded="false" aria-controls="form" style="margin-bottom:10px;">
   Nuevo
 </button>
@@ -90,9 +96,22 @@
                     </tr>
                 </tbody>
             </table>
-            <a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
-                <button ng-disabled="!myForm.$valid" type="button" ng-click="save(requisicion); requisicion='';items='';" class="btn btn-success" ng-show="action">Guardar</button>
-                <button type="button" ng-click="save(requisicion);" class="btn btn-success" ng-show="!action">Actualizar</button>
+            <div class="row">
+            <div class="form-group col-sm-12">
+                <a ng-click="addItem()" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
+                <div class="col-sm-6">
+                <div class="row">
+                    <div class="pull-left">
+                        <button ng-disabled="!myForm.$valid" type="button" ng-click="save(requisicion);" class="btn btn-success" ng-show="action">Guardar</button>
+                        <button type="button" ng-click="save(requisicion);" class="btn btn-success" ng-show="!action">Actualizar</button>
+                    </div>
+                    <div ng-show="!action" class="pull-right">
+                        <a ng-click="limpiar();" class="btn btn-warning">Cancelar</a>
+                    </div>
+                </div>
+                </div>
+            </div>
+            </div>
             </form>
           </div>
         </div>
@@ -103,20 +122,18 @@
     <table class="table table-striped table-bordered" ng-show="requisiciones.length > 0">
         <tr>
             <th width="10%">Folio</th>
-            <th width="20%">Cliente</th>
+            <th width="15%">Cliente</th>
             <th width="20%">Departamento</th>
+            <th width="25%">Comentarios</th>
             <th width="10%">Fecha</th>
-            <th width="20%">Comentarios</th>
-            <th width="10">Estatus</th>
             <th width="10%">Acciones</th>
         </tr>
         <tr ng-repeat="requisicion in requisiciones">
             <td>{{ requisicion.folio }}</td>
             <td>{{ nombreCliente(requisicion) }}</td>
             <td>{{ requisicion.departamento }}</td>
-            <td>{{ requisicion.fecha | date:"dd/MM/yyyy" }}</td>
             <td>{{ requisicion.comentarios }}</td>
-            <td>{{ requisicion.estatus }}</td>
+            <td>{{ requisicion.fecha | date:"dd/MM/yyyy" }}</td>
             <td>
             <div class="dropdown">
               <button class="btn btn-small btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -124,11 +141,11 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a ng-click="editar(requisicion._id)">Editar</a></li>
-                <li><a href="#/requisiciones/{{requisicion._id}}">Ver</a></li>
-                <li><a href="#/requisiciones/enviar/{{requisicion._id}}">Enviar</a></li>
-                <li><a href="#/cotizaciones/create/{{requisicion._id}}">Cotizar</a></li>
-                <li><a href="#/requisiciones" ng-click="remove(requisicion)">Eliminar</a></li>
+                <li><a href="/requisiciones" ng-click="editar(requisicion._id)"><span class="fa fa-pencil"> Editar</span></a></li>
+                <li><a href="/requisiciones/{{requisicion._id}}"><span class="fa fa-eye"> Ver</span></a></li>
+                <li><a href="/requisiciones/enviar/{{requisicion._id}}"><span class="fa fa-paper-plane"> Enviar</span></a></li>
+                <li><a href="/cotizaciones/create/{{requisicion._id}}"><span class="fa fa-file-text"> Cotizar</span></a></li>
+                <li><a href="/requisiciones" ng-click="remove(requisicion)"><span class="fa fa-trash"> Eliminar</span></a></li>
               </ul>
             </div>
             </td>

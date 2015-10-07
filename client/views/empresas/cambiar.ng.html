@@ -1,0 +1,13 @@
+<div style="margin-top:-20px;" class="row">
+    <div class="col-sm-12">
+        <h3 class="tag-title">Seleccionar Empresa</h3>
+        <hr />
+    </div>
+</div>
+<div ng-repeat="empresa in empresas" ng-click="save(usuarioempresa, empresa._id)" class="col-sm-3 text-center">
+    <div class="panel panel-success panel-pricing">
+        <div class="panel-heading">
+            <h2>{{empresa.nombre}}</h2>
+        </div>
+    </div>
+</div>

@@ -1,3 +1,9 @@
+<div style="margin-top:-20px;" class="row">
+    <div class="col-sm-12">
+        <h3 class="tag-title">Proveedores</h3>
+        <hr />
+    </div>
+</div>
 
 <button class="btn btn-primary" type="button" data-toggle="collapse" data-target="#collapseExample" aria-expanded="false" style="margin-bottom:10px;" aria-controls="collapseExample">
   Nuevo
@@ -36,11 +42,15 @@
                         <textarea id="direccion" class="form-control" ng-model="proveedor.direccion"></textarea> 
                     </div>
                 </div>
-                <div class="pull-right">
-                    <button ng-disabled="!myForm.$valid" ng-click="save(proveedor); proveedor='';" class="btn btn-success">Guardar</button>
-                </div>
-                <div ng-show="!action" class="pull-left">
-                    <button  ng-click="limpiar();" class="btn btn-warning">Cancelar</button>
+                <div class="row">
+                    <div class="form-group col-sm-12">
+                        <div class="pull-right">
+                            <button ng-disabled="!myForm.$valid" ng-click="save(proveedor); proveedor='';" class="btn btn-success">Guardar</button>
+                        </div>
+                        <div ng-show="!action" class="pull-left">
+                            <a  ng-click="limpiar();" class="btn btn-warning">Cancelar</a>
+                        </div>
+                    </div>
                 </div>
             </form>
           </div>
@@ -53,9 +63,9 @@
         <tr>
             <th width="20%">Nombre</th>
             <th width="20%">Contacto</th>
-            <th width="10%">Telefono</th>
+            <th width="10%">Teléfono</th>
             <th width="20%">Correo</th>
-            <th width="20%">Direccion</th>
+            <th width="20%">Dirección</th>
             <th width="10%">Acciones</th>
         </tr>
         <tr ng-repeat="proveedor in proveedores">
@@ -71,8 +81,8 @@
                     <span class="caret"></span>
                   </button>
                   <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                    <li><a href="#/proveedores" ng-click="update(proveedor._id)">Editar</a></li>
-                    <li><a ng-click="remove(proveedor)">Eliminar</a></li>
+                    <li><a href="/proveedores" ng-click="update(proveedor._id)"><span class="fa fa-pencil"> Editar</span></a></li>
+                    <li><a href="/proveedores" ng-click="remove(proveedor)"><span class="fa fa-trash"> Eliminar</span></a></li>
                   </ul>
                 </div>
             </td>

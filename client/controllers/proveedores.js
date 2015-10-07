@@ -9,6 +9,7 @@ angular.module("app").controller("proveedoresCtrl", function($scope, $meteor, $s
              $scope.action = true;
              $scope.myForm.$setUntouched();
              $state.go("proveedores");
+             $('.collapse').collapse('hide');
         };
 
         $scope.update = function(id)
@@ -18,11 +19,13 @@ angular.module("app").controller("proveedoresCtrl", function($scope, $meteor, $s
             $scope.proveedor = Proveedores.findOne({_id:id});
             $scope.action = false;
             $state.go("proveedores");
+            $('.collapse').collapse('show');
         };
         $scope.limpiar = function(){
             $scope.proveedor = '';
             $scope.myForm.$setUntouched();
             $scope.action = true;
+            $('.collapse').collapse('hide');
         }
         $scope.remove = function(proveedor)
         {

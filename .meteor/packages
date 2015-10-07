@@ -9,7 +9,12 @@ autopublish
 insecure
 urigo:angular
 angularui:angular-ui-router
-mrt:bootstrap-3
 angularui:ui-select
 angularjs:angular-sanitize
 email
+accounts-password
+accounts-ui
+angular:angular-material
+planettraining:material-design-icons
+blaze
+jspdf:core

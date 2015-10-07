@@ -1,25 +1,14 @@
-<div class="">
+
 <form name="myForm">
     <div class="row">
         <div class="form-group col-sm-2">
             <label for="folio">Folio</label>
-            <input id="folio" class="form-control" type="text" ng-model="cotizacion.folio" readOnly>
+            <span id="folio" class="form-control" disabled>{{cotizacion.folio}}</span>
         </div>
        
           <div class="form-group col-sm-4">
             <label for="cliente">Cliente</label>
-            <ui-select ng-model="cotizacion.cliente_id"
-                         theme="bootstrap"
-                         ng-disabled="true"
-                         reset-search-input="false"
-                         style="width: 300px;">
-                <ui-select-match placeholder="Seleccione">{{$select.selected.nombre}}</ui-select-match>
-                <ui-select-choices repeat="cliente._id as cliente in clientes | filter: $select.search"
-                         refresh="refreshClientes($select.search)"
-                         refresh-delay="0">
-                  <div ng-bind-html="cliente.nombre | highlight: $select.search"></div>
-                </ui-select-choices>
-              </ui-select>
+            <span id="cliente" class="form-control" disabled>{{nombreCliente(cotizacion.cliente_id)}}</span>
           </div><!--/col-->
 
         <div class="form-group col-sm-4">
@@ -38,16 +27,16 @@
             <input ng-change="getTotal()" id="porcentaje" class="form-control" type="number" ng-model="cotizacion.porcentajeGeneral" min="0"/>
         </div>
         <div class="form-group col-sm-3">
-            <label for="subtotal">Subtotal:</label>
-            <span id="subtotal"> {{cotizacion.subtotal | currency}} </span>
+            <label>Subtotal:</label>
+            <span style="text-align:right;" class="form-control" disabled> {{cotizacion.subtotal | currency}} </span>
         </div>
         <div class="form-group col-sm-3">
-            <label for="iva">Iva:</label>
-            <span id="iva"> {{cotizacion.iva | currency}} </span>
+            <label>Iva:</label>
+            <span style="text-align:right;" class="form-control" disabled> {{cotizacion.iva | currency}} </span>
         </div>
         <div class="form-group col-sm-3">
-            <label for="total">Total:</label>
-            <span id="total"> {{cotizacion.total | currency}} </span>
+            <label>Total:</label>
+            <span style="text-align:right;" class="form-control" disabled> {{cotizacion.total | currency}} </span>
         </div>
     </div>
     <div class="row">
@@ -56,13 +45,13 @@
             <textarea id="comentarios" class="form-control" ng-model="cotizacion.comentarios"></textarea> 
     </div>
     </div>
-    <h1>Articulos</h1>
+    <h1>Artículos</h1>
     <table class="table table-bordered table-striped">
     <thead>
         <tr>
             <th width="20%">Proveedor</th>
             <th width="5%">Cantidad</th>
-            <th width="20%">Articulo</th>
+            <th width="20%">Artículo</th>
             <th width="15%">Observaciones</th>
             <th width="10%">Precio Unit.</th>
             <th width="5%">Porcentaje</th>
@@ -143,7 +132,20 @@
         </tr>
     </tbody>
 </table>
-<a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
-    <button ng-disabled="!myForm.$valid" type="button" ng-click="save(cotizacion); cotizacion='';" class="btn btn-success">Guardar</button>
-</form>
+<div class="row">
+<div class="form-group col-sm-12">
+    <a ng-click="addItem()" href="" class="btn btn-primary pull-right"><li class="fa fa-plus"></li></a>
+    <div class="col-sm-6">
+    <div class="row">
+        <div class="pull-left">
+            <button ng-show="action" ng-disabled="!myForm.$valid" type="button" ng-click="save(cotizacion); cotizacion='';" class="btn btn-success">Guardar</button>
+            <button type="button" ng-click="save(cotizacion);" class="btn btn-success" ng-show="!action">Actualizar</button>
+        </div>
+        <div ng-show="!action" class="pull-right">
+            <a ng-click="limpiar();" class="btn btn-warning">Cancelar</a>
+        </div>
+    </div>
+    </div>
 </div>
+</div>
+</form>

@@ -9,6 +9,7 @@ angular.module("app").controller("clientesCtrl", function($scope, $meteor, $stat
              $scope.action = true;
              $scope.myForm.$setUntouched();
              $state.go("clientes");
+             $('.collapse').collapse('hide');
         };
 
         $scope.update = function(id)
@@ -18,12 +19,14 @@ angular.module("app").controller("clientesCtrl", function($scope, $meteor, $stat
             $scope.cliente = Clientes.findOne({_id:id});
             $scope.action = false;
             $state.go("clientes");
+            $('.collapse').collapse('show');
         };
         
         $scope.limpiar = function(){
             $scope.cliente = '';
             $scope.myForm.$setUntouched();
             $scope.action = true;
+            $('.collapse').collapse('hide');
         }
 
         $scope.remove = function(cliente)

@@ -1,22 +1,28 @@
+<div style="margin-top:-20px;" class="row">
+    <div class="col-sm-12">
+        <h3 class="tag-title">Cotizaciones</h3>
+        <hr />
+    </div>
+</div>
 <div class="row">
     <div class="col-sm-12">
     <table class="table table-striped table-bordered" ng-show="cotizaciones.length > 0">
         <tr>
-            <th width="10%">Folio</th>
-            <th width="20%">Cliente</th>
-            <th width="20%">Departamento</th>
-            <th width="10%">Fecha</th>
-            <th width="20%">Comentarios</th>
-            <th width="10">Estatus</th>
-            <th width="10%">Acciones</th>
+            <th class="col-sm-1">Folio</th>
+            <th class="col-sm-2">Cliente</th>
+            <th class="col-sm-2">Total</th>
+            <th class="col-sm-2">Departamento</th>
+            <th class="col-sm-3">Comentarios</th>
+            <th class="col-sm-1">Fecha</th>
+            <th class="col-sm-1">Acciones</th>
         </tr>
         <tr ng-repeat="cotizacion in cotizaciones">
             <td>{{ cotizacion.folio }}</td>
             <td>{{ nombreCliente(cotizacion) }}</td>
+            <td>{{ cotizacion.total | currency }}</td>
             <td>{{ cotizacion.departamento }}</td>
-            <td>{{ cotizacion.fecha | date:"dd/MM/yyyy"}}</td>
             <td>{{ cotizacion.comentarios }}</td>
-            <td>{{ cotizacion.estatus }}</td>
+            <td>{{ cotizacion.fecha | date:"dd/MM/yyyy"}}</td>
             <td>
             <div class="dropdown">
               <button class="btn btn-small btn-primary dropdown-toggle" type="button" id="dropdownMenu1" data-toggle="dropdown" aria-haspopup="true" aria-expanded="true">
@@ -24,9 +30,10 @@
                 <span class="caret"></span>
               </button>
               <ul class="dropdown-menu" aria-labelledby="dropdownMenu1">
-                <li><a href="#/cotizaciones/update/{{cotizacion._id}}">Editar</a></li>
-                <li><a href="#/cotizaciones/{{cotizacion._id}}">Ver</a></li>
-                <li><a href="#/cotizaciones" ng-click="remove(cotizacion)">Eliminar</a></li>
+                <li><a href="/cotizaciones/update/{{cotizacion._id}}"><span class="fa fa-pencil"> Editar</span></a></li>
+                <li><a href="/cotizaciones/{{cotizacion._id}}"><span class="fa fa-eye"> Ver</span></a></li>
+                <li><a href="/ordenCompra/ver/{{cotizacion._id}}"><span class="fa fa-eye"> Orden Compra</span></a></li>
+                <li><a href="/cotizaciones" ng-click="remove(cotizacion)"><span class="fa fa-trash"> Eliminar</span></a></li>
               </ul>
             </div>
             </td>

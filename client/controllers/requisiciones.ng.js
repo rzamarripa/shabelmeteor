@@ -1,35 +1,51 @@
 angular.module("app").controller("requisicionesCtrl", function($scope, $meteor, $state, $stateParams)
-    { 
-        $scope.articulos = $meteor.collection(Articulos);
-        $scope.clientes = $meteor.collection(Clientes);
-        $scope.requisiciones = $meteor.collection(function() { return Requisiciones.find({estatus:true})});
+    {
+        $scope.articulos = $meteor.collection(function() { return Articulos.find({estatus:true})});
+        $scope.clientes = $meteor.collection(function() { return Clientes.find({estatus:true})});
+        $scope.requisiciones = $meteor.collection(function() { return Requisiciones.find({estatus:true,empresa_id:$scope.currentUser.empresa_id})});
         $scope.action = true;
         $scope.requisicion = {};
+        
         var empty_item = {
             cantidad: 0,
         };
 
         $scope.items = [angular.copy(empty_item)];
+        
         $scope.save = function(requisicion)
         {
             requisicion.detalle = angular.copy($scope.items);
             requisicion.estatus = true;
+            requisicion.empresa_id = $scope.currentUser.empresa_id;
+            if(!$scope.action){
+                requisicion.updatedBy = $scope.currentUser._id;
+            }else{
+                requisicion.createdBy = $scope.currentUser._id;
+            }
             console.log(requisicion);
             $scope.requisiciones.save(requisicion);
-            $state.go("requisiciones",{reload:true});
+            $state.go("requisiciones");
             $scope.myForm.$setUntouched();
             $scope.requisicion= {};
+            $scope.items = [angular.copy(empty_item)];
+            $scope.action = true;
+            $('.collapse').collapse('hide');
         };
 
         $scope.editar = function(id)
          {
-
             $scope.requisicion = Requisiciones.findOne({_id:id});
             $scope.items = $scope.requisicion.detalle;
             $scope.action = false;
-            //$('.collapse').collapse('show');
+            $('.collapse').collapse('show');
          };
-
+         $scope.limpiar = function(){
+            $scope.requisicion = {};
+            $scope.items = [angular.copy(empty_item)];
+            $scope.myForm.$setUntouched();
+            $scope.action = true;
+            $('.collapse').collapse('hide');
+        }
         $scope.remove = function(requisicion)
         {
             requisicion.estatus = false;
@@ -71,27 +87,44 @@ angular.module("app").controller("requisicionesVerCtrl", function($scope, $meteo
       var articulo = Articulos.findOne({_id:articulo_id});
        return articulo.nombre;
     };
+    $scope.crearPdf = function(){
+        var pdf = new jsPDF('p','pt', 'letter');
+        var specialElementHandlers = { 
+            '#editor': function (element, renderer) { 
+                return true;
+            } 
+        };
+        pdf.fromHTML($('#content').html(), 75, 20, { 
+            'width': 522, 
+                'elementHandlers': specialElementHandlers
+        }); 
+        pdf.save('requisicion.pdf'); 
+    };
 });
 
 angular.module("app").controller("requisicionesEnviarCtrl", function($scope, $meteor, $state, $stateParams)
 {
-    $scope.asdasd = $meteor.collection(RequisicionesToProveedores);
     $scope.enviadas = $meteor.collection(function(){ return RequisicionesToProveedores.find({requisicion_id:$stateParams._id})});
-    $scope.proveedores = $meteor.collection(Proveedores);
+    $scope.proveedores = $meteor.collection(function() { return Proveedores.find({estatus:true})});
     $scope.enviarRequisicion = {};
 
     $scope.save = function(enviarRequisicion){
         angular.forEach(enviarRequisicion.proveedores, function(proveedor_id){
+            var data = {
+              name: "Valentin"
+            };
+            var html = Blaze.toHTMLWithData(Template.sample,data);
             var proveedor = Proveedores.findOne({_id:proveedor_id});
             Meteor.call('sendEmail',
             proveedor.correo,
             'shabel.masoft@gmail.com',
             'Requisicion Shabel',
-            'http://localhost:3000/#/requisiciones/'+$stateParams._id);
+            html);
         });
         
         enviarRequisicion.fecha = new Date();
         enviarRequisicion.requisicion_id = $stateParams._id;
+        enviarRequisicion.createdBy = $scope.currentUser._id;
         $scope.enviadas.save(enviarRequisicion);
         //RequisicionesToProveedores.insert(enviarRequisicion);
         $scope.myForm.$setUntouched();

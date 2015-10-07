@@ -8,6 +8,8 @@ angular.module("app").controller("articulosCtrl", function($scope, $meteor, $sta
              $scope.articulos.save(articulo);
              $scope.myForm.$setUntouched();
              $state.go("articulos");
+             $('.collapse').collapse('hide');
+             $scope.action = true;
         };
 
         $scope.update = function(id)
@@ -15,6 +17,7 @@ angular.module("app").controller("articulosCtrl", function($scope, $meteor, $sta
             $scope.articulo = Articulos.findOne({_id:id});
             $scope.action = false;
             $state.go("articulos");
+            $('.collapse').collapse('show');
         };
         
         $scope.remove = function(articulo)
@@ -25,8 +28,9 @@ angular.module("app").controller("articulosCtrl", function($scope, $meteor, $sta
         
         $scope.limpiar = function(){
             $scope.articulo = '';
-            $scope.myForm.$setUntouched();
             $scope.action = true;
+            $scope.myForm.$setUntouched();
+            $('.collapse').collapse('hide');
         }
 
         $scope.removeAll = function()
