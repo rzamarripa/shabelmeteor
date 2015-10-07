@@ -21,12 +21,14 @@
                 url: '/register',
                 templateUrl: 'client/views/users/register.ng.html',
                 controller: 'RegisterCtrl',
-                controllerAs: 'rc',
+                controllerAs: 'rc'
+/*
                 resolve: {
                   "currentUser": ["$meteor", function($meteor){
                     return $meteor.requireUser();
                   }]
                 }
+*/
               })
               .state('resetpw', {
                 url: '/resetpw',
@@ -196,6 +198,16 @@
                 url: '/ordenCompra/ver/:_id',
                 templateUrl: 'client/views/ordenCompra/ver.ng.html',
                 controller: 'ordenCompraVerCtrl',
+                resolve: {
+                  "currentUser": ["$meteor", function($meteor){
+                    return $meteor.requireUser();
+                  }]
+                }
+            })
+            .state('dashboard', {
+                url: '/dashboard',
+                templateUrl: 'client/views/dashboard/index.ng.html',
+                controller: 'dashboardCtrl',
                 resolve: {
                   "currentUser": ["$meteor", function($meteor){
                     return $meteor.requireUser();
